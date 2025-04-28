@@ -1,0 +1,6 @@
+*.pt
+AD_PROJECT/*_predictions
+AD_PROJECT/*_validation
+TEST
+combined_color
+train_snowpole.py

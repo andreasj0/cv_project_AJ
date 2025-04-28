@@ -1,0 +1,7 @@
+path: /home/ascend/Desktop/cv_project/dataset
+train: combined_color/train/images
+val: combined_color/valid/images
+test: combined_color/test/images
+
+names:
+  0: snow_pole
