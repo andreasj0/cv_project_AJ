@@ -54,6 +54,7 @@ results = model.train(
     val=True
     )
 
+
 print("Training call completed.")
 
 best_model_path = os.path.join(PROJECT_NAME, RUN_NAME, 'weights', 'best.pt')
