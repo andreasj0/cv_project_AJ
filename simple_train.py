@@ -3,7 +3,7 @@ import torch
 import os
 import time
 
-MODEL_VARIANT = 'yolo11m.pt'
+MODEL_VARIANT = 'yolo11s.pt'
 
 # Dataset and output
 DATASET_YAML_PATH = '/home/ascend/Desktop/cv_project/dataset/dataset.yaml'
@@ -15,14 +15,14 @@ RUN_NAME = f'AD_RUN_{int(time.time())}'
 
 
 # Tunable params
-#LEARNING_RATE = 0.001
-OPTIMIZER = 'auto'
-EPOCHS = 200
+LEARNING_RATE = 0.005
+OPTIMIZER = 'AdamW'
+EPOCHS = 150
 IMGSZ = 1024
 BATCH_SIZE = 8
-PREDICT_CONF = 0.25
-PATIENCE = 50
-AUG_SCALE = 0.5
+#PREDICT_CONF = 0.25
+#PATIENCE = 50
+#AUG_SCALE = 0.5
 
 
 # -- 1. Training --
@@ -39,13 +39,13 @@ print("Starting training...")
 
 results = model.train(
     data=DATASET_YAML_PATH,
-    #lr0=LEARNING_RATE,
+    lr0=LEARNING_RATE,
     optimizer=OPTIMIZER,
     epochs=EPOCHS,
     imgsz=IMGSZ,
     batch=BATCH_SIZE,
-    patience=PATIENCE,
-    scale=AUG_SCALE,
+    #patience=PATIENCE,
+    #scale=AUG_SCALE,
     device=DEVICE,
     project=PROJECT_NAME,
     name=RUN_NAME,
@@ -112,7 +112,7 @@ print(f"Running prediction on images in: {test_img_path}")
 predict_results = model.predict(
     source=test_img_path,
     imgsz=IMGSZ,
-    conf=PREDICT_CONF,
+    #conf=PREDICT_CONF,
     save_txt=True,
     save_conf=True,
     project=PROJECT_NAME,
