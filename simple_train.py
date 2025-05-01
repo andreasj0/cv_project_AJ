@@ -10,7 +10,7 @@ DATASET_YAML_PATH = '/home/ascend/Desktop/cv_project/dataset/dataset.yaml'
 DATASET_ROOT = '/home/ascend/Desktop/cv_project/dataset' 
 IMG_SUBDIR = 'combined_color' 
 DEVICE = '0'
-PROJECT_NAME = 'AD_PROJECT' #TEST - AD_PROJECT
+PROJECT_NAME = 'AD_PROJECT'
 RUN_NAME = f'AD_RUN_{int(time.time())}' 
 
 
@@ -28,7 +28,7 @@ AUG_COPY_PASTE = 0.1
 CLOSE_MOSAIC_EPOCHS = 30
 
 
-# -- 1. Training --
+# 1. Training
 best_model_path = None
 
 print(f"\n 1. Model Training"); 
@@ -42,7 +42,7 @@ print("Starting training...")
 
 results = model.train(
     data=DATASET_YAML_PATH,
-    #lr0=LEARNING_RATE,
+    #lr0=LEARNING_RATE, # auto overwrites learning rate
     optimizer=OPTIMIZER,
     epochs=EPOCHS,
     imgsz=IMGSZ,
@@ -66,7 +66,7 @@ print("Training call completed.")
 best_model_path = os.path.join(PROJECT_NAME, RUN_NAME, 'weights', 'best.pt')
 
 
-# -- 2. Validation --
+# 2. Validation
 print(f"\n 2. Model Validation")
 print(f"Loading trained model for validation: {best_model_path}")
 model = YOLO(best_model_path)
@@ -95,7 +95,7 @@ print(f"  - mAP50(B):     {metrics.get('metrics/mAP50(B)', 'N/A'):.4f}")
 print(f"  - mAP50-95(B):  {metrics.get('metrics/mAP50-95(B)', 'N/A'):.4f}")
 
 
-# -- 3. Prediction --
+# 3. Prediction
 print(f"\n 3. Generating Predictions on Test Set")
 test_img_path = os.path.join(DATASET_ROOT, IMG_SUBDIR, 'test', 'images')
 
