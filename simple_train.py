@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-import torch
 import os
 import time
 
@@ -11,38 +10,36 @@ DATASET_ROOT = '/home/ascend/Desktop/cv_project/dataset'
 IMG_SUBDIR = 'combined_color' 
 DEVICE = '0'
 PROJECT_NAME = 'AD_PROJECT'
-RUN_NAME = f'AD_RUN_{int(time.time())}' 
+RUN_NAME = f'AD_RUN_{int(time.time())}' # Creates unique name each run
 
 
 # Tunable params
-#LEARNING_RATE = 0.001
-OPTIMIZER = 'auto'
-EPOCHS = 170
-IMGSZ = 1024
-BATCH_SIZE = 8
-PREDICT_CONF = 0.15
-PATIENCE = 50
-AUG_SCALE = 0.3
-AUG_TRANSLATE = 0.1
-AUG_COPY_PASTE = 0.1
-CLOSE_MOSAIC_EPOCHS = 30
+#LEARNING_RATE = 0.001          # Overwritten when using optimizer = auto
+OPTIMIZER = 'auto'              # Method used to adjust the models learning (often AdamW)
+EPOCHS = 170                    # Number of times the model goes through the training set
+IMGSZ = 1024                    # Resize of input images
+BATCH_SIZE = 8                  # Number of images the model processes at the same time
+PREDICT_CONF = 0.15             # Min confidence score for detection to be valid
+PATIENCE = 50                   # Early stopping
+AUG_SCALE = 0.3                 # Randomly zoom images in/out
+AUG_TRANSLATE = 0.1             # Randomly shift images left/right/up/down
+AUG_COPY_PASTE = 0.1            # Probability of copying objects and pasting them onto other images 
+CLOSE_MOSAIC_EPOCHS = 30        # Number of final epochs to turn off mosaic augmentation 
 
 
 # 1. Training
 best_model_path = None
 
 print(f"\n 1. Model Training"); 
-print(f"Loading base model: {MODEL_VARIANT}")
+print(f"Loading base model: {MODEL_VARIANT}") 
 
 model = YOLO(MODEL_VARIANT); 
-print("Base model loaded successfully.")
-print(f"Attempting to train using MANUAL dataset YAML: {DATASET_YAML_PATH}")
 print(f"Output project: {PROJECT_NAME}, Run name: {RUN_NAME}"); 
 print("Starting training...")
 
 results = model.train(
     data=DATASET_YAML_PATH,
-    #lr0=LEARNING_RATE, # auto overwrites learning rate
+    #lr0=LEARNING_RATE,         # auto overwrites learning rate
     optimizer=OPTIMIZER,
     epochs=EPOCHS,
     imgsz=IMGSZ,
@@ -56,14 +53,14 @@ results = model.train(
     project=PROJECT_NAME,
     name=RUN_NAME,
     exist_ok=False,
-    cache=True, # Trying to use RAM since I lack disk space
+    cache=True,                 # Trying to use RAM since I lack disk space
     val=True
     )
 
 
-print("Training call completed.")
+print("Training completed.")
 
-best_model_path = os.path.join(PROJECT_NAME, RUN_NAME, 'weights', 'best.pt')
+best_model_path = os.path.join(PROJECT_NAME, RUN_NAME, 'weights', 'best.pt') 
 
 
 # 2. Validation
@@ -78,7 +75,7 @@ val_results = model.val(
     data=DATASET_YAML_PATH,
     imgsz=IMGSZ,
     batch=BATCH_SIZE, 
-    split='val',  
+    split='val',                # Validation dataset split
     device=DEVICE,
     project=PROJECT_NAME, 
     name=val_run_name,
